@@ -3,39 +3,53 @@ CREATE DATABASE IF NOT EXISTS globalgtc;
 USE globalgtc;
 
 CREATE TABLE cotizacion(
-id INT PRIMARY KEY UNIQUE NOT NULL,
-vendedor INT NOT NULL,
-cliente INT NOT NULL,
+id_cotizacion INT PRIMARY KEY UNIQUE NOT NULL,
+id_vendedor INT NOT NULL,
+id_cliente INT NOT NULL,
 fecha DATE NOT NULL,
-detalle_cotizacion INT UNIQUE NOT NULL,
-FOREIGN KEY (cliente) REFERENCES cliente(id),
-FOREIGN KEY (vendedor) REFERENCES vendedor(id),
-FOREIGN KEY (detalle_cotizacion) REFERENCES detalle_cotizacion(id)
+id_detalle INT UNIQUE NOT NULL
 );
 CREATE TABLE vendedor(
-id INT PRIMARY KEY UNIQUE NOT NULL,
+id_vendedor INT PRIMARY KEY UNIQUE NOT NULL,
 nombre VARCHAR(25) NOT NULL
 );
 CREATE TABLE cliente(
-id INT PRIMARY KEY UNIQUE NOT NULL,
+id_cliente INT PRIMARY KEY UNIQUE NOT NULL,
 nombre VARCHAR(25) NOT NULL,
 rut VARCHAR(25),
-direccion VARCHAR(25),
+direccion VARCHAR(25), ## evaluar hacer otra tabla
 telefono VARCHAR(25),
 correo_electronico VARCHAR(25) NOT NULL
 );
 CREATE TABLE detalle_cotizacion(
-id INT PRIMARY KEY UNIQUE NOT NULL,
-productos INT NOT NULL
+id_detalle INT PRIMARY KEY UNIQUE NOT NULL,
+id_productos INT NOT NULL ## Listado de productos
 );
 CREATE TABLE producto(
-id INT PRIMARY KEY UNIQUE NOT NULL,
+id_producto INT PRIMARY KEY UNIQUE NOT NULL,
+medidas VARCHAR(15) NOT NULL,
 nombre VARCHAR(45) NOT NULL UNIQUE,
+id_proveedor INT NOT NULL,
 precio INT NOT NULL,
+categoria VARCHAR(15),
 peso INT NOT NULL,
-medidas VARCHAR(15) NOT NULL
+cantidad INT NOT NULL
 );
-ALTER TABLE cotizacion
-ADD FOREIGN KEY (cliente) REFERENCES cliente(id),
-ADD FOREIGN KEY (vendedor) REFERENCES vendedor(id),
-ADD FOREIGN KEY (detalle_cotizacion) REFERENCES detalle_cotizacion(id);
+CREATE TABLE proveedor (
+id_proveedor INT PRIMARY KEY UNIQUE NOT NULL,
+nombre VARCHAR(25) NOT NULL,
+direccion_planta VARCHAR(25) NOT NULL
+);
+ALTER TABLE cotizacion 
+ADD FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+ADD FOREIGN KEY (id_vendedor) REFERENCES vendedor(id_vendedor),
+ADD FOREIGN KEY (id_detalle) REFERENCES detalle_cotizacion(id_detalle)
+;
+ALTER TABLE detalle_cotizacion 
+ADD FOREIGN KEY (id_productos) REFERENCES producto(id_producto)
+;
+ALTER TABLE producto 
+ADD FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor)
+;
+
+
